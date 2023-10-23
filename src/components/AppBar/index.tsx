@@ -1,3 +1,4 @@
+import config from "@/config";
 import { Avatar, Button, Chip } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -15,24 +16,33 @@ const CustomAppBar = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Renault Twitch Cup Trackmania
           </Typography>
-          {status === "authenticated" ? (
-            <Box sx={{ display: "flex", columnGap: 2, alignItems: "center" }}>
-              <Chip
-                avatar={
-                  <Avatar>
-                    {session?.user?.name ? session?.user?.name.charAt(0) : "U"}
-                  </Avatar>
-                }
-                label={session?.user?.name}
-              />
-              <Button onClick={() => signOut()} variant="outlined">
-                Odhlásit se
-              </Button>
-            </Box>
-          ) : (
-            <Button onClick={() => signIn("trackmania")} variant="outlined">
-              Přihlásit se
-            </Button>
+          {config.enableAuth && (
+            <>
+              {" "}
+              {status === "authenticated" ? (
+                <Box
+                  sx={{ display: "flex", columnGap: 2, alignItems: "center" }}
+                >
+                  <Chip
+                    avatar={
+                      <Avatar>
+                        {session?.user?.name
+                          ? session?.user?.name.charAt(0)
+                          : "U"}
+                      </Avatar>
+                    }
+                    label={session?.user?.name}
+                  />
+                  <Button onClick={() => signOut()} variant="outlined">
+                    Odhlásit se
+                  </Button>
+                </Box>
+              ) : (
+                <Button onClick={() => signIn("trackmania")} variant="outlined">
+                  Přihlásit se
+                </Button>
+              )}
+            </>
           )}
         </Toolbar>
       </AppBar>

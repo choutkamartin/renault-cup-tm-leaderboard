@@ -1,3 +1,4 @@
+import config from "@/config";
 import {
   Button,
   Card,
@@ -46,29 +47,33 @@ const Index = () => {
         >
           Časy jsou aktualizovány každých 5 minut.
         </Typography>
-        <Divider sx={{ marginY: 2 }} />
-        <Typography
-          variant="h6"
-          component="div"
-          gutterBottom
-          sx={{ marginBottom: 2 }}
-        >
-          Aktualizace zajetých časů
-        </Typography>
-        <Typography
-          variant="body2"
-          component="div"
-          gutterBottom
-          sx={{ marginBottom: 2 }}
-        >
-          Jsi streamer a některé tebou zajeté časy jsou &apos;červené&apos;?
-          Svůj čas můžeš aktualizovat. Přihlaš se, přejdi na konkrétní mapu a
-          svůj čas budeš moci upravit. Přihlásit se musíš stejným účtem, který
-          používáš v Trackmanii.
-        </Typography>
-        <Button onClick={() => signIn("trackmania")} variant="outlined">
-          Přihlásit se
-        </Button>
+        {config.enableAuth && (
+          <>
+            <Divider sx={{ marginY: 2 }} />
+            <Typography
+              variant="h6"
+              component="div"
+              gutterBottom
+              sx={{ marginBottom: 2 }}
+            >
+              Aktualizace zajetých časů
+            </Typography>
+            <Typography
+              variant="body2"
+              component="div"
+              gutterBottom
+              sx={{ marginBottom: 2 }}
+            >
+              Jsi streamer a některé tebou zajeté časy jsou &apos;červené&apos;?
+              Svůj čas můžeš aktualizovat. Přihlaš se, přejdi na konkrétní mapu
+              a svůj čas budeš moci upravit. Přihlásit se musíš stejným účtem,
+              který používáš v Trackmanii.
+            </Typography>
+            <Button onClick={() => signIn("trackmania")} variant="outlined">
+              Přihlásit se
+            </Button>
+          </>
+        )}
       </CardContent>
     </Card>
   );

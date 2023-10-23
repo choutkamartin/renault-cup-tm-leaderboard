@@ -29,36 +29,33 @@ const getRecords = async (id: string) => {
   ).then((res) => res.json());
 
   const recordsFromDb = await Record.find({ mapId: id });
-  if (recordsFromDb.length > 1) {
-    const updatedRecords = records
-      .map((record: any) => {
-        const { time, updatedAt } = recordsFromDb.find(
-          (item) => item.accountId === record.accountId
-        );
-
-        return {
-          ...record,
-          updatedAt,
-          recordScore: { ...record.recordScore, updatedTime: time },
-        };
-      })
-      .sort(
-        (a: any, b: any) =>
-          parseFloat(
-            a.recordStore.updatedTime
-              ? a.recordStore.updatedTime
-              : a.recordScore.time
-          ) -
-          parseFloat(
-            b.recordStore.updatedTime
-              ? b.recordStore.updatedTime
-              : b.recordScore.time
-          )
+  let updatedRecords = records;
+  if (recordsFromDb.length > 0) {
+    updatedRecords = records.map((record: any) => {
+      const data = recordsFromDb.find(
+        (item) => item.accountId === record.accountId
       );
-    return updatedRecords;
-  }
 
-  return records;
+      return {
+        ...record,
+        updatedAt: data?.updatedAt,
+        recordScore: { ...record.recordScore, updatedTime: data?.time },
+      };
+    });
+  }
+  return updatedRecords.sort(
+    (a: any, b: any) =>
+      parseFloat(
+        a.recordScore.updatedTime
+          ? a.recordScore.updatedTime
+          : a.recordScore.time
+      ) -
+      parseFloat(
+        b.recordScore.updatedTime
+          ? b.recordScore.updatedTime
+          : b.recordScore.time
+      )
+  );
 };
 
 export default getRecords;

@@ -78,6 +78,9 @@ const Map = ({ records, map }: any) => {
           </Typography>
         </CardContent>
       </Card>
+      <Alert severity="warning" variant="outlined" sx={{ mb: 4 }}>
+        Časy byly po turnaji uzamčeny a již se nezmění.
+      </Alert>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -152,7 +155,7 @@ const Map = ({ records, map }: any) => {
                         <Tooltip
                           title={
                             record.updatedAt
-                              ? "Hráč si na stránce upravil zajetý čas, z důvodu, kdy jeho nejlepší rekord byl zajet před oficiálním zahájením turnaje."
+                              ? "Hráč zajel lepší čas mimo turnaj. Čas byl proto upraven na ten, který zajel v rámci turnaje."
                               : "Hráč zajel tento rekord před oficiálním zahájením turnaje. Tento čas proto nelze brát jako směrodatný. Trackmania bohužel neposkytuje (neukládá) více zajetých časů, pouze čas nejlepší."
                           }
                         >
@@ -238,6 +241,5 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const records = await getRecords(params?.id as string);
   return {
     props: { map, records: JSON.parse(JSON.stringify(records)) },
-    revalidate: 60 * 5,
   };
 };
