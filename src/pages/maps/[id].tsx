@@ -7,12 +7,21 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Card, CardContent, CardMedia, Link, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  IconButton,
+  Link,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import getMap from "@/utils/getMap";
 import maps from "@/utils/mapIds";
 import getRecords from "@/utils/getRecords";
 import removeCharacters from "@/utils/removeCharacters";
 import findUser from "@/utils/findUser";
+import QuestionIcon from "@mui/icons-material/QuestionMark";
 
 const Map = ({ records, map }: any) => {
   if (!map || !records) return <div>Načítání...</div>;
@@ -36,28 +45,54 @@ const Map = ({ records, map }: any) => {
             <TableRow>
               <TableCell>Pozice</TableCell>
               <TableCell>Jméno hráče</TableCell>
-              <TableCell align="right">Čas</TableCell>
+              <TableCell align="center">Čas</TableCell>
+              <TableCell align="center">Datum zajetí rekordu</TableCell>
+              <TableCell align="center">Vysvětlivky</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {records.map((record: any, index: number) => (
-              <TableRow key={record.accountId}>
-                <TableCell component="th" scope="row">
-                  {index + 1}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  <Link
-                    href={`https://trackmania.io/#/player/${record.accountId}`}
-                    target="_blank"
+            {records.map((record: any, index: number) => {
+              const dateOfRecord = new Date(record.timestamp);
+              const tournamentLaunchDate = new Date("2023-10-22T19:50:00");
+
+              const drivenBeforeLaunch =
+                tournamentLaunchDate.getTime() > dateOfRecord.getTime();
+
+              return (
+                <TableRow key={record.accountId}>
+                  <TableCell component="th" scope="row">
+                    {index + 1}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    <Link
+                      href={`https://trackmania.io/#/player/${record.accountId}`}
+                      target="_blank"
+                    >
+                      {findUser(record.accountId)}
+                    </Link>
+                  </TableCell>
+                  <TableCell align="center">
+                    {mstoTime(record.recordScore.time)}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{ color: drivenBeforeLaunch ? "red" : "secondary" }}
                   >
-                    {findUser(record.accountId)}
-                  </Link>
-                </TableCell>
-                <TableCell align="right">
-                  {mstoTime(record.recordScore.time)}
-                </TableCell>
-              </TableRow>
-            ))}
+                    {new Date(record.timestamp).toLocaleDateString()}{" "}
+                    {new Date(record.timestamp).toLocaleTimeString()}
+                  </TableCell>
+                  <TableCell align="center">
+                    {drivenBeforeLaunch && (
+                      <Tooltip title="Hráč zajel tento rekord před oficiálním zahájením turnaje. Tento čas proto nelze brát jako směrodatný. Trackmania bohužel neposkytuje (neukládá) více zajetých časů, pouze čas nejlepší.">
+                        <IconButton size="small">
+                          <QuestionIcon />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
