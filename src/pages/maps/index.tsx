@@ -5,6 +5,7 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+  Grid,
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/router";
@@ -18,22 +19,32 @@ const Maps = ({ maps }: any) => {
 
   if (!maps) return <div>Načítání...</div>;
 
-  return maps.map((map: any) => (
-    <Card sx={{ mb: 4 }} key={map.mapUid}>
-      <CardMedia sx={{ height: 256 }} image={map.thumbnailUrl} title="Mapa" />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {removeCharacters(map.name)}
-        </Typography>
-        <Typography variant="body1" component="div">
-          Autor: {map.submitter}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button onClick={() => router.push(`/maps/${map.mapUid}`)}>Časy</Button>
-      </CardActions>
-    </Card>
-  ));
+  return (
+    <Grid container spacing={4}>
+      {maps.map((map: any) => (
+        <Grid item xs={6} key={map.mapUid}>
+          <Card>
+            <CardMedia
+              sx={{ height: 196 }}
+              image={map.thumbnailUrl}
+              title="Mapa"
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {removeCharacters(map.name)}
+              </Typography>
+              <Button
+                onClick={() => router.push(`/maps/${map.mapUid}`)}
+                variant="outlined"
+              >
+                Časy
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
+  );
 };
 
 export default Maps;

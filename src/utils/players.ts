@@ -29,6 +29,7 @@ const players = [
   { id: "c61b3869-9aa1-405c-964b-4edd8794c4d6", name: "Mazarin3k" },
   { id: "9964a691-99e1-4803-a848-a9344810b1f9", name: "Sovazino" },
   { id: "fc90c921-1c77-4ce0-b28c-f9c5acd13e2f", name: "DeeThane.TLD" },
+  { id: "bbe594df-c86b-4393-8a27-f881a0a98698", name: "Martafiixek" },
 ];
 
 export default players;

@@ -24,7 +24,12 @@ const BottomNav = () => {
     >
       <BottomNavigation
         showLabels
-        sx={{ backgroundColor: "secondary.main" }}
+        sx={{
+          maxWidth: "md",
+          background: "none",
+          width: "100%",
+          margin: "auto",
+        }}
         value={value}
         onChange={(event, newValue) => {
           setValue(newValue);
