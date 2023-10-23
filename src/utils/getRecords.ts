@@ -1,8 +1,12 @@
+import dbConnect from "@/lib/dbConnect";
 import getToken from "./getToken";
 import players from "./players";
+import Record from "@/models/Record";
 
 const getRecords = async (id: string) => {
   const accessToken = await getToken();
+
+  await dbConnect();
 
   const mapInfo = await fetch(
     `https://prod.trackmania.core.nadeo.online/maps/?mapUidList=${id}`,
@@ -22,15 +26,36 @@ const getRecords = async (id: string) => {
         Authorization: `nadeo_v1 t=${accessToken}`,
       },
     }
-  )
-    .then((res) => res.json())
-    .then((data) =>
-      data.sort(
-        (a: any, b: any) =>
-          parseFloat(a.recordScore.time) - parseFloat(b.recordScore.time)
+  ).then((res) => res.json());
+
+  const recordsFromDb = await Record.find({ mapId: id });
+  let updatedRecords = records;
+  if (recordsFromDb.length > 0) {
+    updatedRecords = records.map((record: any) => {
+      const data = recordsFromDb.find(
+        (item) => item.accountId === record.accountId
+      );
+
+      return {
+        ...record,
+        updatedAt: data?.updatedAt,
+        recordScore: { ...record.recordScore, updatedTime: data?.time },
+      };
+    });
+  }
+  return updatedRecords.sort(
+    (a: any, b: any) =>
+      parseFloat(
+        a.recordScore.updatedTime
+          ? a.recordScore.updatedTime
+          : a.recordScore.time
+      ) -
+      parseFloat(
+        b.recordScore.updatedTime
+          ? b.recordScore.updatedTime
+          : b.recordScore.time
       )
-    );
-  return records;
+  );
 };
 
 export default getRecords;

@@ -1,8 +1,9 @@
 import Layout from "@/components/Layout";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import type { AppProps } from "next/app";
+import { SessionProvider } from "next-auth/react";
 
-const App = ({ Component, pageProps }: AppProps) => {
+const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
   const themeLight = createTheme({
     palette: {
       mode: "dark",
@@ -12,12 +13,14 @@ const App = ({ Component, pageProps }: AppProps) => {
   });
 
   return (
-    <ThemeProvider theme={themeLight}>
-      <CssBaseline />
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </ThemeProvider>
+    <SessionProvider session={session}>
+      <ThemeProvider theme={themeLight}>
+        <CssBaseline />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </ThemeProvider>
+    </SessionProvider>
   );
 };
 
